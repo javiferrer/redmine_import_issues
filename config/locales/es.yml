@@ -1,0 +1,50 @@
+es:
+  
+  label_import_issues: Importar peticiones
+  label_source_file: Fichero
+  label_source_redmine: Redmine
+  label_source_ignore: No importar
+  label_import_legend: Leyenda
+  label_import_source: Origen
+  label_import_from_file: Importar desde fichero
+  label_row_number: Fila
+  label_validation_result: ¿Correcto?
+  label_import_from_redmine: Importar desde redmine
+  error_file_mandatory: "Es obligatorio indicar un fichero"
+  error_file_incorrect: El fichero subido no es correcto
+  label_get_data_from: Dato a importar
+  label_get_data_from_redmine: Obtener el dato desde redmine
+  label_get_data_from_file: Obtener el dato desde el fichero
+  label_no_import_field: No importar este campo
+  label_import_templates: Plantillas de importación
+  label_in_progress_actions: Importaciones sin finalizar
+  label_destination_tracker: Petición de destino
+  label_source_file: Fichero
+  label_use_template: Usar
+  label_template: Plantilla
+  label_template_description: Descripción
+  label_recover_action: Recuperar
+  label_overview_template: Resumen de la importación
+  label_save_as_template: Guardar como plantilla
+  label_columns_file_complete: Columnas del fichero
+  label_map_import: Mapeo de valores
+  label_import_results: Resultado de la importacion
+  label_import_failed: El proceso de importación ha finalizado con errores
+  label_import_ok: El proceso de importación ha finalizado con éxito
+  label_import_num_rows: Filas
+  label_edit_mapping: Editar mapeo de valores
+  error_all_required_filled_not_mapped: Todos los campos requeridos deben estar mapeados
+  error_value_not_exists: ¡Valor no disponible en redmine!
+  import_details: Detalle de la importación
+  label_import_change_file: Cambiar fichero
+  link_back_to_overview: Volver al resumen
+  link_import_issues: Importar peticiones 
+  fields_for_update: Campo de actualización
+  label_save_as_template: Guardar como plantilla
+  label_template_name: Nombre de la plantilla
+  label_use_template: Usar
+  label_edit_template: Editar
+  label_template_file: Fichero plantilla
+  field_activity_id: Actividad
+  label_import_legend_spent_time: Valores para tiempo invertido
+  

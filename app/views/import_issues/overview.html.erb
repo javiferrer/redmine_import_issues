@@ -1,0 +1,117 @@
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+<% end %>
+
+<h2><%=l(:label_overview_template)%></h2>
+<%= form_tag({ :controller => 'import_issues', :action => 'update', :id => @import}, :method => 'put', :id => "import_issues_step_1") do |f| %>
+<div class="splitcontentleft">
+	<div class="box">
+	  	<table class='list import-table' id="table-custom-fields">
+			<thead>
+				<th><%= l(:field_issue) %></th>
+				<th><%= l(:label_import_source)%></th>
+				<th><%= l(:label_get_data_from)%></th>
+			</thead>
+	  		<tbody>
+	  			<% @import.fields.each do |field, mapping| %>
+	  				<tr>
+	  					<td><%= readable_field_name(field)%></td>
+	  					<td>
+	  						<span class="import-<%=mapping["source"]%>">
+		  						<%= l("label_source_#{mapping['source']}")%>
+	  						</span>	
+						</td>
+	  					<td><%= readable_field_value(field, mapping)%></td>
+	  				</tr>
+	  			<% end %>
+	  		</tbody>
+	  	</table>
+	  	<hr/>
+	  	<table class='list import-table' id="table-custom-fields">
+			<thead>
+				<th><%= l(:label_spent_time) %></th>
+				<th><%= l(:label_import_source)%></th>
+				<th><%= l(:label_get_data_from)%></th>
+			</thead>
+	  		<tbody>
+	  			<% @import.time_entry_fields.each do |time_field, mapping| %>
+	  				<tr>
+	  					<td><%= l("field_#{time_field}".to_sym) %></td>
+	  					<td>
+	  						<span class="import-<%=mapping["source"]%>">
+		  						<%= l("label_source_#{mapping['source']}")%>
+	  						</span>	
+						</td>
+	  					<td><%= readable_value_for_time_entry(@import, time_field, mapping)%></td>
+	  				</tr>
+	  			<% end %>
+	  		</tbody>
+	  	</table>	  	
+  </div>
+</div>
+<div class="splitcontentright">
+	<div class="box">
+		<h3><%= l(:label_import_templates)%></h3>
+		<div>
+			<%=link_to 'Validar', import_action_validate_path(@project, @import)%>
+		</div>
+		<div>
+			<%= link_to 'Importar', import_save_issues_path(@project, @import) %>
+		</div>
+		<% #unless @import.is_template %>
+  		<div>
+  			<%= link_to l(:label_edit_mapping), :action => :prepare, :import_id => @import  %>
+  		</div>	
+		<% #end %>	
+	</div>
+</div>	  
+
+
+		
+<% end %>
+<!-- 
+		  	<p>
+	  		<%=label_tag l(:label_save_as_template)%>
+	  		<%=check_box_tag "Guardar como plantilla", 1%>
+	  	</p>
+	  	<table class='' id="table-template">
+			<tbody>
+				<tr>
+					<td>
+						<%= label_tag l(:field_name)%>
+						<%= text_field_tag :name, @import.name, :size => 60%>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<%= label_tag l(:field_description)%>
+						<br />
+						<%= text_area_tag :description, @import.description, :cols => 60 %>						
+					</td>
+				</tr>
+			
+	  		</tbody>
+	  	</table>
+	  	<%= submit_tag l(:button_save) %>
+-->
+
+<% content_for :sidebar do %>
+	<h3><%=l(:label_import_legend)%></h3>
+	<ul class="import-legend">
+		<li>
+			<%= no_import_field_span(l(:label_no_import_field)) %>	
+		</li>
+		<li>
+ 			<%= content_tag('span',l(:label_import_from_file), :class => 'import-file') %>
+		</li>
+		<li>
+ 			<%= content_tag('span',l(:label_import_from_redmine), :class => 'import-redmine') %>
+		</li>		
+	</ul>
+	<h3><%=l(:label_columns_file_complete)%></h3>
+	<ul>
+		<%@import.headers.each do |header|%>
+			<li><%=header.first%></li>
+		<% end %>
+	</ul>
+<% end %>

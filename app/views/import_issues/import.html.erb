@@ -1,0 +1,34 @@
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+<% end %>
+
+<h2><%=l(:label_import_results)%></h2>
+
+<div class="import-issues-right-text">
+	<%= link_to l(:link_back_to_overview), :action => 'overview', :import_id => @import %>
+</div> 
+
+<div class="box">
+	<%= render :partial => "log", :locals => { :log => @import.log } %>
+</div>
+
+<% content_for :sidebar do %>
+	<h3><%=l(:label_import_legend)%></h3>
+	<ul class="import-legend">
+		<li>
+			<%= no_import_field_span(l(:label_no_import_field)) %>	
+		</li>
+		<li>
+ 			<%= content_tag('span',l(:label_import_from_file), :class => 'import-file') %>
+		</li>
+		<li>
+ 			<%= content_tag('span',l(:label_import_from_redmine), :class => 'import-redmine') %>
+		</li>		
+	</ul>
+	<h3><%=l(:label_columns_file_complete)%></h3>
+	<ul>
+		<%@import.headers.each do |header|%>
+			<li><%=header.first%></li>
+		<% end %>
+	</ul>
+<% end %>

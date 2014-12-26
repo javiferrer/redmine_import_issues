@@ -1,0 +1,14 @@
+<table class='list import-table' id="table-custom-fields">
+	<thead>
+		<th><%= l(:label_row_number) %></th>
+		<th><%= l(:label_validation_result)%></th>
+	</thead>
+	<tbody>
+		<% @import.log.each do |row, result| %>
+			<tr>
+				<td><%= row %></td>
+				<td><%= import_errors result%></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

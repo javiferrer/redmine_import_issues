@@ -1,0 +1,135 @@
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+<% end %>
+
+<h2><%=l(:label_map_import)%></h2>
+
+<%= form_tag({ :controller => 'import_issues', :action => 'update', :id => @import}, :method => 'put', :id => "import_issues_step_1") do %>
+<div class="box">
+  <h4></h4>
+  <table>
+    <tr>
+      <td><strong><%= l(:fields_for_update) %></strong></td>
+      <td><%= select_tag "options[field_for_update]", options_from_collection_for_select(@fields_for_update, "id", "name", @import.field_for_update), :class => 'custom_field_selector',
+      :include_blank => true %></td>
+    </tr>
+    <tr>
+      <td><strong><%= l(:label_save_as_template) %></strong></td>
+      <td><%= check_box_tag "options[save_as_template]", "1", @import.is_template %></td>
+    </tr>
+    <tr id="template_name_tr" <%= "style='display: none'".html_safe unless @import.is_template  %>>
+      <td><strong><%= l(:label_template_name) %></strong></td>
+      <td><%= text_field_tag "options[template_name]", @import.name %></td>
+      <td><strong><%= l(:field_description) %></strong></td>
+      <td><%= text_field_tag "options[template_description]", @import.description, :size => 60 %></td>      
+    </tr>
+  </table>
+</div>
+	<h4><%= l(:field_core_fields) %></h4>
+	  <div>
+	  	<table class='list import-table import-table-core-fields'>
+			<thead>
+				<th><%= l(:field_core_fields) %></th>
+				<th><%= l(:label_import_source)%></th>
+				<th><%= l(:label_get_data_from)%></th>
+			</thead>
+	  		<tbody>
+			<% @import.core_fields.each do |core_field| %>
+				<tr class="<%= cycle 'odd', 'even' %>">
+					<td>
+						<%= l("field_#{core_field}".sub(/_id$/, '')) %>
+						<%="<span class=\"required\">*</span>".html_safe if ['subject','priority_id','status_id'].include?(core_field)%>
+					</td>
+					<td><%= select_tag "fields[#{core_field}][source]", options_for_select(@sources, @import.source_for(core_field)), :class => 'custom_field_selector',
+					:onchange => "updateValuesForField(this, '#{core_field}')"%></td>
+					<td><div id="<%="#{core_field}-values"%>"><%= values_selected_for_field(core_field, @import) %></div></td>
+				</tr>
+			<% end %>
+	  		</tbody>
+	  	</table>
+	  </div>
+
+	
+	<h4><%= l(:label_custom_field_plural) %></h4>
+	  <div>
+	  	<table class='list import-table import-table-custom-fields' id="table-custom-fields">
+			<thead>
+				<th><%= l(:field_core_fields) %></th>
+				<th><%= l(:label_import_source)%></th>
+				<th><%= l(:label_get_data_from)%></th>
+			</thead>
+	  		<tbody>
+			<% @import.custom_fields.each do |custom_field| %>
+				<tr class="<%= cycle 'odd', 'even' %> field" id="tr-<%=custom_field.id%>">
+					<td><%= custom_field.name %>
+						<%="<span class=\"required\">*</span>".html_safe if custom_field.is_required?%>
+					</td>
+					<td><%= select_tag "fields[#{custom_field.id}][source]", options_for_select(@sources, @import.source_for(custom_field.id)), :class => 'custom_field_selector',
+					:onchange => "updateValuesForField(this, #{custom_field.id})" %></td>
+					<td><div id="<%="#{custom_field.id}-values"%>"><%= values_selected_for_field(custom_field.id, @import) %></div></td>
+				</tr>
+			<% end %>
+	  		</tbody>
+	  	</table>
+	  </div>
+	  
+  <h4><%=l(:label_spent_time)%></h4>
+    <div>
+      <table class='list import-table import-table-custom-fields' id="table-custom-fields">
+      <thead>
+        <th><%= l(:field_core_fields) %></th>
+        <th><%= l(:label_import_source)%></th>
+        <th><%= l(:label_get_data_from)%></th>
+      </thead>
+        <tbody>
+      <% @fields_for_time_entry.each do |time_field| %>
+        <tr class="<%= cycle 'odd', 'even' %> field" id="tr-<%=time_field%>">
+          <td><%= l("field_#{time_field}".to_sym) %>
+          </td>
+          <td><%= select_tag "time_entry[#{time_field}][source]", options_for_select(@sources, @import.source_for(time_field)), :class => 'custom_field_selector',
+          :onchange => "updateValuesForTimeEntry(this, '#{time_field}')" %></td>
+          <td><div id="<%="#{time_field}-values"%>"><%= values_selected_for_time_entry(time_field, @import) %></div></td>
+        </tr>
+      <% end %>
+        </tbody>
+      </table>
+    </div>  
+	<%= submit_tag l(:button_save) %>	
+<% end %>
+
+<% render :partial => 'sidebar'%>
+
+<% include_calendar_headers_tags %>
+
+<%= javascript_tag do %>
+function updateValuesForField(option_id, custom_field_id) {
+	option_value = $(option_id).val();
+	
+
+	$.ajax({
+    	url: '<%= values_for_field_path(@project, @import, :format => 'js') %>',
+    	type: 'GET',
+    	data: {option: option_value, custom_field_id: custom_field_id}
+  	});
+
+	
+}
+
+function updateValuesForTimeEntry(option_id, custom_field_id) {
+  option_value = $(option_id).val();
+  
+
+  $.ajax({
+      url: '<%= values_for_time_entry_path(@project, @import, :format => 'js') %>',
+      type: 'GET',
+      data: {option: option_value, custom_field_id: custom_field_id}
+    });
+
+  
+}
+$('.import-date').datepicker(datepickerOptions);
+$('.date_cf').datepicker(datepickerOptions);
+$("#options_save_as_template").click(function () {
+    $("#template_name_tr").toggle();
+});
+<% end %>

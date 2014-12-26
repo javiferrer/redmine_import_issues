@@ -1,0 +1,11 @@
+<% if @option == "redmine" %>
+    $('#<%=@field_id%>-values').html('<%= content_tag('span',escape_javascript(values_for_time_entry(@core_field, @import)), :class => 'import-redmine')%>');
+  <% if @format == "date"%>
+    $('#<%="time_entry_#{@field_id}_value"%>').datepicker(datepickerOptions);
+  <%end%>
+<% elsif @option == "file" %>
+  $('#<%=@field_id%>-values').html('<%= content_tag('span',escape_javascript(select_tag "time_entry[#{@field_id}][value]", options_for_select(@headers, :selected => @selected_header)), :class => 'import-file')%>');
+  
+<% else %>
+  $('#<%=@field_id%>-values').html('<%= no_import_field_span %>');
+<% end %>

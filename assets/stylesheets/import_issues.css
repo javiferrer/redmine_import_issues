@@ -1,0 +1,36 @@
+.import-ignore {
+	background: url(../images/ignore.png) no-repeat 1px;
+	padding-left: 20px;
+	color: red;	
+}
+
+.import-redmine {
+	background: url(../images/redmine.png) no-repeat 1px;
+	padding-left: 20px;
+	color: blue;	
+}
+
+.import-file {
+	background: url(../images/sheet.png) no-repeat 1px;
+	padding-left: 20px;
+	color: green;	
+}
+
+ul.import-legend {
+	list-style-type: none;
+	padding-left: 0px;
+}
+
+ul.import-legend li {
+	padding-bottom: 5px;
+}
+
+table.import-table tr {
+	text-align: center;
+}
+
+.import-issues-right-text {
+	text-align: right;
+	padding-bottom: 5px;
+	
+}

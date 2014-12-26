@@ -1,0 +1,85 @@
+<h2><%=l(:label_import_issues)%></h2>
+
+<%= form_tag({ :controller => 'import_issues', :action => 'create', :id => @project }, :multipart => true, :id => "import_issues_step_1") do %>
+
+  <div class="splitcontentleft">
+
+    
+    <div class="box">
+      <h3><%= l(:label_import_templates)%></h3>
+      <table class="list">
+        <thead>
+          <th><%=l(:label_template_name)%></th>
+          <th><%=l(:label_template_description)%></th>
+          <th></th>  
+          <th></th>        
+        </thead>
+        <tbody>
+          <% @templates.each do |template| %>
+            <tr>
+              <td><%=template.name%></td>
+              <td><%=template.description%></td>
+              <td><%= link_to l(:label_use_template), {:action => 'recover', :id => @project, :import_id => template}%></td>
+              <td><%= link_to l(:label_edit_template), {:action => 'prepare', :id => @project, :import_id => template}%></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>  
+    
+  </div>
+  <div class="splitcontentright">
+    <div class="box">
+      <h3>Nueva importación</h3>
+        <p>
+          <%= label_tag l(:label_destination_tracker)%>
+          <%= select_tag 'import[tracker_id]', options_from_collection_for_select(@trackers, "id", "name"), {:required => true} %>
+        </p>
+        
+        <p>
+          <span class="add_attachment">
+            <%= label_tag l(:label_source_file)%>
+          <%= file_field_tag 'attachments[dummy][file]',
+                :id => nil,
+                :class => 'file_selector',
+                :multiple => true,
+                :onchange => 'addInputFiles(this);',
+                :data => {
+                  :max_file_size => Setting.attachment_max_size.to_i.kilobytes,
+                  :max_file_size_message => l(:error_attachment_too_big, :max_size => number_to_human_size(Setting.attachment_max_size.to_i.kilobytes)),
+                  :max_concurrent_uploads => Redmine::Configuration['max_concurrent_ajax_uploads'].to_i,
+                  :upload_path => uploads_path(:format => 'js'),
+                  :description_placeholder => l(:label_optional_description)
+                } %>
+          (<%= l(:label_max_size) %>: <%= number_to_human_size(Setting.attachment_max_size.to_i.kilobytes) %>)
+          </span> 
+        </p>
+        <%= submit_tag l(:button_add) %>
+      
+    </div>
+  </div>
+<% end %>
+<% content_for :sidebar do %>
+  <h3>Help</h3>
+  
+  Plantillas de importación: usa una plantilla de importación para importaciones repetitivas.
+
+Nueva importación: usa esta opción para crear una nueva plantilla de importación. Durante el proceso podrás transformarla en una plantilla.
+
+
+Campos contratamiento especial:
+
+Assignado a: 
+
+Estado, Versión y Categoría: se buscará en la base de datos dependiendo del formato de la columna del fichero. Por ejemplo, si especifica el valor 10 y el formato de la columna es de tipo texto, se buscará el estado llamado "10". 
+
+Privada: especifique 0 o vacío marcala como no privada. 1 o cualquier otro valor numérico. para marcarla como privada.
+
+
+Valores múltiples:
+
+Valores numéricos separados por |. 
+
+
+
+<% end %>

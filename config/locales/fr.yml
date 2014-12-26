@@ -1,0 +1,50 @@
+fr:
+  
+  label_import_issues: Import issues
+  label_source_file: File
+  label_source_redmine: Redmine
+  label_source_ignore: Do not import
+  label_import_legend: Legend
+  label_import_source: Source
+  label_import_from_file: Import from file
+  label_row_number: Row
+  label_validation_result: is valid?
+  label_import_from_redmine: Import from redmine
+  error_file_mandatory: File is mandatory
+  error_file_incorrect: Uploaded file is not valid
+  label_get_data_from: Data to import
+  label_get_data_from_redmine: Get data from redmine
+  label_get_data_from_file: Get data from file
+  label_no_import_field: Don't import the field
+  label_import_templates: Import templates
+  label_in_progress_actions: Import unfinished
+  label_destination_tracker: Target tracker
+  label_source_file: File
+  label_use_template: Use
+  label_template: Template
+  label_template_description: Description
+  label_recover_action: Recover
+  label_overview_template: Overview
+  label_save_as_template: Save as template
+  label_columns_file_complete: "File's columns"
+  label_map_import: Data mapping
+  label_import_results: Result of import process
+  label_import_failed: Import process has finished with errors
+  label_import_ok: Import process done successfully
+  label_import_num_rows: Rows
+  label_edit_mapping: Edit mapping
+  error_all_required_filled_not_mapped: All mandatory fields must be mapped
+  error_value_not_exists: Value is not available in redmine!
+  import_details: Import process details
+  label_import_change_file: Change file
+  link_back_to_overview: Back to summary
+  link_import_issues: Import issues
+  fields_for_update: Key field for update issues
+  label_save_as_template: Save as template
+  label_template_name: Template name
+  label_use_template: Use
+  label_edit_template: Edit
+  label_template_file: Template file
+  field_activity_id: Actividad
+  label_import_legend_spent_time: Spent time Values
+  
