@@ -12,15 +12,21 @@
           <th><%=l(:label_template_name)%></th>
           <th><%=l(:label_template_description)%></th>
           <th></th>  
-          <th></th>        
+          <th></th>   
+          <th></th>     
         </thead>
         <tbody>
           <% @templates.each do |template| %>
             <tr>
               <td><%=template.name%></td>
               <td><%=template.description%></td>
-              <td><%= link_to l(:label_use_template), {:action => 'recover', :id => @project, :import_id => template}%></td>
-              <td><%= link_to l(:label_edit_template), {:action => 'prepare', :id => @project, :import_id => template}%></td>
+              <td><%= link_to l(:label_use_template),  recover_project_import_issue_path(@project, template)%></td>
+              <td><%= link_to l(:label_edit_template),  prepare_project_import_issue_path(@project, template)%></td>
+              <td> <%= link_to image_tag('delete.png'), project_import_issue_path(@project, template), :class => 'delete_issue',
+                                         :data => {:confirm => l(:text_are_you_sure)},
+                                         :method => :delete,
+                                         :class => 'delete',
+                                         :title => l(:button_delete) if User.current.allowed_to?(:import_issues_delete_templates, @project) %>  </td>   
             </tr>
           <% end %>
         </tbody>
@@ -62,24 +68,6 @@
 <% content_for :sidebar do %>
   <h3>Help</h3>
   
-  Plantillas de importación: usa una plantilla de importación para importaciones repetitivas.
-
-Nueva importación: usa esta opción para crear una nueva plantilla de importación. Durante el proceso podrás transformarla en una plantilla.
-
-
-Campos contratamiento especial:
-
-Assignado a: 
-
-Estado, Versión y Categoría: se buscará en la base de datos dependiendo del formato de la columna del fichero. Por ejemplo, si especifica el valor 10 y el formato de la columna es de tipo texto, se buscará el estado llamado "10". 
-
-Privada: especifique 0 o vacío marcala como no privada. 1 o cualquier otro valor numérico. para marcarla como privada.
-
-
-Valores múltiples:
-
-Valores numéricos separados por |. 
-
-
+ 
 
 <% end %>

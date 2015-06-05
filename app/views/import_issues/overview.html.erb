@@ -1,5 +1,5 @@
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'redmine_import_issues'  %>
 <% end %>
 
 <h2><%=l(:label_overview_template)%></h2>
@@ -53,10 +53,10 @@
 	<div class="box">
 		<h3><%= l(:label_import_templates)%></h3>
 		<div>
-			<%=link_to 'Validar', import_action_validate_path(@project, @import)%>
+			<%=link_to l(:label_import_validate), validate_project_import_issue_path(@project, @import)%>
 		</div>
 		<div>
-			<%= link_to 'Importar', import_save_issues_path(@project, @import) %>
+			<%= link_to l(:label_import_import),  import_project_import_issue_path(@project, @import) %>
 		</div>
 		<% #unless @import.is_template %>
   		<div>
@@ -69,31 +69,6 @@
 
 		
 <% end %>
-<!-- 
-		  	<p>
-	  		<%=label_tag l(:label_save_as_template)%>
-	  		<%=check_box_tag "Guardar como plantilla", 1%>
-	  	</p>
-	  	<table class='' id="table-template">
-			<tbody>
-				<tr>
-					<td>
-						<%= label_tag l(:field_name)%>
-						<%= text_field_tag :name, @import.name, :size => 60%>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<%= label_tag l(:field_description)%>
-						<br />
-						<%= text_area_tag :description, @import.description, :cols => 60 %>						
-					</td>
-				</tr>
-			
-	  		</tbody>
-	  	</table>
-	  	<%= submit_tag l(:button_save) %>
--->
 
 <% content_for :sidebar do %>
 	<h3><%=l(:label_import_legend)%></h3>

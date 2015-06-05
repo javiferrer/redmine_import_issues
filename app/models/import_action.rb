@@ -75,19 +75,18 @@ class ImportAction < ActiveRecord::Base
     self.fields.each{|k,v|
       map[k] = v["value"] if k.to_i != 0 && v["source"] == "redmine" 
     }
-    map
+    map  
   end  
   
   def core_fields_mapping_from_file
     map = {}
     self.fields.each{|k,v|
-      map[k] = v["value"] if k.to_i == 0 && v["source"] == "file" 
+      map[k] = v["value"].to_s if k.to_i == 0 && v["source"] == "file" 
     }
     map
   end
   
   def get_core_value(field, row)
-    puts "Esta es la fila #{row}"
     v, value = row[:value], row[:value]
     format = row[:format]
     case field
@@ -115,9 +114,8 @@ class ImportAction < ActiveRecord::Base
         v = Version.find_by_id(value).id rescue -1
       end                  
     else
-      v = value      
+      v = value.to_s      
     end
-    puts "#{field}: #{v}"
     v
   end
   
@@ -126,7 +124,7 @@ class ImportAction < ActiveRecord::Base
     self.fields.each{|k,v|
       map[k] = v["value"] if k.to_i != 0 && v["source"] == "file" 
     }
-    map
+    map   
   end    
   
   def book_file
@@ -177,11 +175,10 @@ class ImportAction < ActiveRecord::Base
   
   def load_or_create_issue(issue_mapping)
     if self.field_for_update
-      cf_for_update_value = issue_mapping["custom_field_values"][self.field_for_update.to_s].to_i.to_s
+      cf_for_update_value = issue_mapping["custom_field_values"][self.field_for_update.to_s]
       i = self.project.issues.joins(:custom_values).where("custom_field_id = #{self.field_for_update}
       and tracker_id = #{self.tracker_id} and custom_values.value = '#{cf_for_update_value.to_s}'").first
-      puts "custom_field_id = #{self.field_for_update}
-      and tracker_id = #{self.tracker_id} and custom_values.value = '#{cf_for_update_value}'"
+
       
       if i
         issue = Issue.find(i.id)
@@ -197,8 +194,7 @@ class ImportAction < ActiveRecord::Base
   end
   
   def create_issue_journal(attributes)
-    
-    puts "escribimos logs"
+
     journal = Journal.new(:journalized => issue, :user => self.user)
     diferencias = @attributes_before_change.diff(attributes)
     diferencias.except!("updated_on", "id")
@@ -228,7 +224,7 @@ class ImportAction < ActiveRecord::Base
     result = {}
     
  
-    Issue.transaction do
+    #Issue.transaction do
       book.first_data_row.upto(book.last_row) do |index|
         row = load_row(index)
         issue_mapping = build_complete_mapping(row, issue_template)
@@ -246,7 +242,7 @@ class ImportAction < ActiveRecord::Base
           save_time_entries(time_entries, issue.id)
         end
       end      
-    end
+    #end
     save_log(result)
   end
   
@@ -391,7 +387,7 @@ class ImportAction < ActiveRecord::Base
   def create_time_entries(file_row, issue_id = nil)
     time_entries = []
     t = {:issue_id => issue_id}
-    puts file_row
+    #puts file_row
     self.time_entry_fields.each do |time_field, mapping|
       puts mapping
       value = (mapping["source"] == "redmine" ? mapping["value"] : file_row[mapping["value"].to_i][:value])
@@ -401,7 +397,7 @@ class ImportAction < ActiveRecord::Base
     end
     t[:users] = [User.current.id] unless t.has_key?(:users)
     t.delete(:users).each do |user|
-      puts t
+      #puts t
       ttmp = TimeEntry.new(t)
       ttmp.project_id = self.project_id
       ttmp.user_id = user.to_i
@@ -431,19 +427,21 @@ class ImportAction < ActiveRecord::Base
     format = @@formats[t]["format"] if @@formats[t]   
     format ||= "string"
     accept_multiple = (["user","version","list"].include?(format) && @@formats[t]["multiple"])
-    value = file_row[v.to_i][:value]
+    value = file_row[v.to_i][:value].to_s
     
     if format == "string" && file_row[v.to_i][:format] == :float
       value = value.to_i.to_s
     elsif format == "int" && file_row[v.to_i][:format] == :float
-      value = value.to_i
+      value = value.to_i.to_s
+    elsif format == "list" && file_row[v.to_i][:format] == :float
+      value = value.to_i.to_s
     elsif accept_multiple && file_row[v.to_i][:format] == :string
       value = value.split('|')
-      puts value
+      #puts value
     else
       value = value.to_s
     end
-    
+    #puts "#{file_row[v.to_i][:format]}: #{value}"
     value         
   end
   
@@ -495,7 +493,6 @@ class ImportAction < ActiveRecord::Base
         }
       end
       @current_journal.save!
-      puts "guardamos journal #{@current_journal.inspect}"
       # reset current journal
       init_journal @current_journal.user, issue, @current_journal.notes
     end

@@ -47,4 +47,6 @@ es:
   label_template_file: Fichero plantilla
   field_activity_id: Actividad
   label_import_legend_spent_time: Valores para tiempo invertido
-  
+  label_import_deleted: plantilla borrada
+  label_import_validate: Validar
+  label_import_import: Importar

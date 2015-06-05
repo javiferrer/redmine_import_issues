@@ -47,4 +47,7 @@ fr:
   label_template_file: Template file
   field_activity_id: Actividad
   label_import_legend_spent_time: Spent time Values
+  label_import_deleted: Template deleted
+  label_import_validate: Validate
+  label_import_import: Import  
   

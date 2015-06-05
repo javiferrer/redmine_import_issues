@@ -163,7 +163,7 @@ module ImportIssuesHelper
   end
   
   def readable_field_value_from_file(mapping)
-    @import.headers.detect{|c| c.last == mapping["value"].to_i}.first
+    @import.headers.detect{|c| c.last == mapping["value"].to_i}.first if @import.headers
   end
   
   def readable_field_value_from_redmine(field, mapping)
@@ -172,8 +172,8 @@ module ImportIssuesHelper
     if field.to_i == 0 #core value
       value = readable_core_field_value(field, value)
     else #TODO: Users and versions
-      field_format = CustomField.find(field.to_i).field_format
-      value = format_value(value, field_format)
+      cf = CustomField.find(field.to_i)
+      value = format_value(value, cf)
     end
     value 
   end

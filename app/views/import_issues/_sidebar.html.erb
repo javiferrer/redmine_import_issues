@@ -2,7 +2,7 @@
 	<h3><%=l(:import_details)%></h3>
 	<%=l(:label_destination_tracker)%>: <%=@import.tracker.name%> <br />
 	<%=l(:label_import_num_rows)%>: <%= @import.total_rows %> <br />
-	<%=l(:field_filename)%>: <%= link_to @import.book_file.filename, download_template_file_path(@project, @import), :class => 'icon icon-attachment', :download => true -%>
+	<%=l(:field_filename)%>: <%= link_to @import.book_file.filename, download_project_import_issue_path(@project, @import), :class => 'icon icon-attachment', :download => true -%>
 	
 	<h3><%=l(:label_columns_file_complete)%> </h3>
 	<ol>
@@ -12,7 +12,7 @@
 	</ol>
 	
 	<h3><%=l(:label_import_change_file)%></h3>
-		<%= form_tag(import_change_file_path(@project, @import), :multipart => true, :method => 'put', :id => "import_issues_step_1") do %>
+		<%= form_tag(change_file_project_import_issue_path(@project, @import), :multipart => true, :method => 'put', :id => "import_issues_step_1") do %>
 
 			<%= file_field_tag 'attachments[dummy][file]',
 				      :id => nil,

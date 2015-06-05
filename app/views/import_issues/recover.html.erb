@@ -1,5 +1,5 @@
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'redmine_import_issues'  %>
 <% end %>
 
 <h2><%=l(:label_overview_template)%></h2>
@@ -7,7 +7,7 @@
 <div class="splitcontentleft">
   <div class="box">
     <h3><%= l(:label_template_file)%></h3>
-    <%=l(:field_filename)%>: <%= link_to @import.template_file.filename, download_template_file_path(@project, @import.template_id), :class => 'icon icon-attachment', :download => true -%>
+    <%=l(:field_filename)%>: <%= link_to @import.template_file.filename, download_project_import_issue_path(@project, @import.template_id), :class => 'icon icon-attachment', :download => true -%>
   </div>
 </div>
 <div class="splitcontentright">

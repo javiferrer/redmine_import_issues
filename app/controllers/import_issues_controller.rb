@@ -18,7 +18,9 @@
 class ImportIssuesController < ApplicationController
   unloadable
 
-  before_filter :load_project, :except => [:update]
+  before_filter :find_project_by_project_id
+  #before_filter :load_project, :except => [:update, :index, :download]
+  before_filter :authorize
   
   
   helper :custom_fields
@@ -43,14 +45,14 @@ class ImportIssuesController < ApplicationController
       @import.save
       
       if @import.check_file      
-        redirect_to :action => 'prepare', :id => @project, :import_id => @import
+        redirect_to prepare_project_import_issue_path(@project, @import)
       else
         flash[:error] = l(:error_file_incorrect)
-        redirect_to :controller => 'import_issues', :action => 'index', :id => @project
+        redirect_to project_import_issues_path(@project)
       end
     else
       flash[:error] = l(:error_file_mandatory)
-      redirect_to :controller => 'import_issues', :action => 'index', :id => @project
+      redirect_to project_import_issues_path(@project)
     end    
   end
   
@@ -68,15 +70,15 @@ class ImportIssuesController < ApplicationController
     @import.save
     
     if @import.all_required_fields_are_mapped?
-      redirect_to :action => 'overview', :id => @import.project, :import_id => @import
+      redirect_to overview_project_import_issue_path(@project, @import)
     else
       flash[:error] = l(:error_all_required_filled_not_mapped)
-      redirect_to :action => 'prepare', :id => @import.project, :import_id => @import
+      redirect_to prepare_project_import_issue_path(@project, @import)
     end
   end
   
   def recover
-    template = ImportAction.find(params[:import_id])
+    template = ImportAction.find(params[:id])
     @import = template.dup
     @import.is_template = false
     @import.template_id = template.id
@@ -85,7 +87,7 @@ class ImportIssuesController < ApplicationController
   end  
 
   def prepare
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     @statuses = @import.tracker.issue_statuses
     @columns = @import.headers
     @sources = ImportIssuesEngine::SOURCES  
@@ -95,21 +97,22 @@ class ImportIssuesController < ApplicationController
   end
   
   def overview
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
   end
 
   def validate
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     @import.validate_process    
   end
 
   def import
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     @import.save_issues
     
     if @import.log_is_ok?
       flash[:notice] = l(:label_import_ok)
       @import.done!
+      @import.destroy unless @import.is_template?
       redirect_to :action => 'index'
     else
       flash[:error] = l(:label_import_failed)
@@ -122,7 +125,7 @@ class ImportIssuesController < ApplicationController
     @field_id = params[:custom_field_id]
     
     unless @option == "ignore"
-      @import = ImportAction.find(params[:import_id])
+      @import = ImportAction.find(params[:id])
       # if custom_field_id is 0, it is a core field
       if params[:custom_field_id].to_i == 0
         @core_field = params[:custom_field_id].to_s
@@ -140,7 +143,7 @@ class ImportIssuesController < ApplicationController
       
       
       if @option == "file"
-        @headers = ImportAction.find(params[:import_id]).headers 
+        @headers = ImportAction.find(params[:id]).headers 
         tmp_search = @headers.select {|h| h.first.upcase == @name_of_field.upcase}.flatten
         @selected_header = 0
         if tmp_search.any?
@@ -160,7 +163,7 @@ class ImportIssuesController < ApplicationController
     @field_id = params[:custom_field_id]
     
     unless @option == "ignore"
-      @import = ImportAction.find(params[:import_id])
+      @import = ImportAction.find(params[:id])
       # if custom_field_id is 0, it is a core field
       if params[:custom_field_id].to_i == 0
         @core_field = params[:custom_field_id].to_s
@@ -172,7 +175,7 @@ class ImportIssuesController < ApplicationController
       
       
       if @option == "file"
-        @headers = ImportAction.find(params[:import_id]).headers 
+        @headers = ImportAction.find(params[:id]).headers 
         tmp_search = @headers.select {|h| h.first.upcase == @name_of_field.upcase}.flatten
         @selected_header = 0
         if tmp_search.any?
@@ -187,7 +190,7 @@ class ImportIssuesController < ApplicationController
   end  
   
   def download
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     file = @import.attachments.last
     send_file file.diskfile, :filename => filename_for_content_disposition(file.filename),
                                     :type => detect_content_type(file),
@@ -195,9 +198,8 @@ class ImportIssuesController < ApplicationController
   end
   
   def change_file_recover
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     if params[:attachments].present?
-      puts "presente"
       
       @import.save_attachments(params[:attachments])
       @import.save  
@@ -224,14 +226,23 @@ class ImportIssuesController < ApplicationController
     redirect_to :action => 'prepare', :id => @project, :import_id => @import    
   end  
   
+  def destroy
+    @import = ImportAction.find(params[:import_id])
+    
+    @import.destroy
   
-  private
-  def load_project
-    @project = Project.find(params[:id])
+    flash[:notice] = l(:label_import_deleted)
+    redirect_to :action => 'index'    
+  end
+  
+  
+  private 
+  def load_import
+    @import = ImportAction.find(params[:id])
   end
   
   def change_file_process
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     if params[:attachments].present?
       
       @import.save_attachments(params[:attachments])

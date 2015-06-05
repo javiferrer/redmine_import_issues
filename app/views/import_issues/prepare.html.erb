@@ -1,10 +1,10 @@
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag :import_issues, :plugin => 'import_issues'  %>
+    <%= stylesheet_link_tag :import_issues, :plugin => 'redmine_import_issues'  %>
 <% end %>
 
 <h2><%=l(:label_map_import)%></h2>
 
-<%= form_tag({ :controller => 'import_issues', :action => 'update', :id => @import}, :method => 'put', :id => "import_issues_step_1") do %>
+<%= form_tag(project_import_issue_path(@project, :id => @import), :method => :put,  :id => "import_issues_step_1") do %>
 <div class="box">
   <h4></h4>
   <table>
@@ -107,7 +107,7 @@ function updateValuesForField(option_id, custom_field_id) {
 	
 
 	$.ajax({
-    	url: '<%= values_for_field_path(@project, @import, :format => 'js') %>',
+    	url: '<%= load_values_for_field_project_import_issue_path(@project, @import, :format => 'js') %>',
     	type: 'GET',
     	data: {option: option_value, custom_field_id: custom_field_id}
   	});
@@ -120,7 +120,7 @@ function updateValuesForTimeEntry(option_id, custom_field_id) {
   
 
   $.ajax({
-      url: '<%= values_for_time_entry_path(@project, @import, :format => 'js') %>',
+      url: '<%= load_values_for_time_entry_project_import_issue_path(@project, @import, :format => 'js') %>',
       type: 'GET',
       data: {option: option_value, custom_field_id: custom_field_id}
     });
