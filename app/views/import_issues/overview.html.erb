@@ -53,10 +53,10 @@
 	<div class="box">
 		<h3><%= l(:label_import_templates)%></h3>
 		<div>
-			<%=link_to l(:label_import_validate), validate_project_import_issue_path(@project, @import)%>
+			<%=link_to l(:label_import_validate), validate_project_import_issue_path(@project, @import), :class => 'show-loading'%>
 		</div>
 		<div>
-			<%= link_to l(:label_import_import),  import_project_import_issue_path(@project, @import) %>
+			<%= link_to l(:label_import_import),  import_project_import_issue_path(@project, @import), :class => 'show-loading' %>
 		</div>
 		<% #unless @import.is_template %>
   		<div>
@@ -90,3 +90,12 @@
 		<% end %>
 	</ul>
 <% end %>
+
+<%= javascript_tag do %>
+
+  $( ".show-loading" ).click(function() {
+    $('#ajax-indicator').show();
+  });  
+
+<% end %>
+

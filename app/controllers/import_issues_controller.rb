@@ -19,7 +19,6 @@ class ImportIssuesController < ApplicationController
   unloadable
 
   before_filter :find_project_by_project_id
-  #before_filter :load_project, :except => [:update, :index, :download]
   before_filter :authorize
   
   
@@ -210,13 +209,13 @@ class ImportIssuesController < ApplicationController
       
       if !@import.check_file
         flash[:error] = l(:error_file_incorrect)
-        redirect_to :action => 'recover', :id => @project, :import_id => @import.template_id
+        redirect_to recover_project_import_issue_path(@project, @import)
       else      
-        redirect_to :action => 'overview', :id => @project, :import_id => @import 
+        redirect_to overview_project_import_issue_path(@project, @import)
       end 
     else
       flash[:error] = l(:error_file_mandatory)
-      redirect_to :action => 'recover', :id => @project, :import_id => @import.template_id
+      redirect_to recover_project_import_issue_path(@project, @import)
     end  
   end
   

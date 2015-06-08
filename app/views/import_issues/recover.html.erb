@@ -13,7 +13,7 @@
 <div class="splitcontentright">
   <div class="box">
   <h3><%=l(:label_import_change_file)%></h3>
-    <%= form_tag(import_change_file_recover_path(@project, @import), :multipart => true, :method => 'put', :id => "import_issues_step_1") do %>
+    <%= form_tag(change_file_recover_project_import_issue_path(@project, @import), :multipart => true, :method => 'put', :id => "import_issues_step_1") do %>
 
       <%= file_field_tag 'attachments[dummy][file]',
               :id => nil,

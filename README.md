@@ -6,7 +6,7 @@ This plugin allows users to import issues and time_entries
 Features
 --------
 
-* Import issues
+* Import issues and its custom fields values
 * Update issues by Issue ID or Custom Value
 * Import time entries
 * Create journals on updated issues
