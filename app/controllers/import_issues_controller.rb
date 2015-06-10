@@ -226,7 +226,7 @@ class ImportIssuesController < ApplicationController
   end  
   
   def destroy
-    @import = ImportAction.find(params[:import_id])
+    @import = ImportAction.find(params[:id])
     
     @import.destroy
   
