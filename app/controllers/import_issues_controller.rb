@@ -222,7 +222,7 @@ class ImportIssuesController < ApplicationController
   def change_file
     change_file_process
     
-    redirect_to :action => 'prepare', :id => @project, :import_id => @import    
+    redirect_to prepare_project_import_issue_path(@project, @import)   
   end  
   
   def destroy
