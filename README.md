@@ -29,6 +29,7 @@ $ git clone https://github.com/javiferrer/redmine_import_issues.git
 ```
 * From redmine root directory, run: 
 ```
+$ bundle install
 $ rake redmine:plugins:migrate RAILS_ENV=production
 ```
 * Restart redmine
